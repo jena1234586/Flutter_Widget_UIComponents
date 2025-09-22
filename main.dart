@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: "Enhanced Lottie Demo",
       theme: ThemeData(
         primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Colors.pink.shade50, // lighter pink background
+        scaffoldBackgroundColor: Colors.pink.shade50,
       ),
       home: LottiePage(),
     );
@@ -38,21 +38,41 @@ class _LottiePageState extends State<LottiePage> {
     Colors.amber.shade200,
     Colors.cyan.shade200,
   ];
+  final List<Color> card3Colors = [
+    Colors.orange.shade200,
+    Colors.brown.shade200,
+    Colors.indigo.shade200,
+    Colors.lime.shade200,
+    Colors.grey.shade300,
+  ];
+  final List<Color> card4Colors = [
+    Colors.teal.shade200,
+    Colors.pink.shade100,
+    Colors.deepPurple.shade200,
+    Colors.lightBlue.shade200,
+    Colors.greenAccent.shade100,
+  ];
 
   int card1Index = 0;
   int card2Index = 0;
+  int card3Index = 0;
+  int card4Index = 0;
 
   late Color card1Color;
   late Color card2Color;
+  late Color card3Color;
+  late Color card4Color;
 
-  int? selectedCard; // null = none selected
-  bool showText = false; // control visibility of text
+  int? selectedCard;
+  bool showText = false;
 
   @override
   void initState() {
     super.initState();
     card1Color = card1Colors[0];
     card2Color = card2Colors[0];
+    card3Color = card3Colors[0];
+    card4Color = card4Colors[0];
   }
 
   void changeColors() {
@@ -63,8 +83,13 @@ class _LottiePageState extends State<LottiePage> {
       } else if (selectedCard == 2) {
         card2Index = (card2Index + 1) % card2Colors.length;
         card2Color = card2Colors[card2Index];
+      } else if (selectedCard == 3) {
+        card3Index = (card3Index + 1) % card3Colors.length;
+        card3Color = card3Colors[card3Index];
+      } else if (selectedCard == 4) {
+        card4Index = (card4Index + 1) % card4Colors.length;
+        card4Color = card4Colors[card4Index];
       }
-      // text stays visible until user taps outside
     });
   }
 
@@ -107,12 +132,12 @@ class _LottiePageState extends State<LottiePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Lottie.network(url, height: 150, repeat: true),
+              Lottie.network(url, height: 120, repeat: true),
               const SizedBox(height: 10),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: textColor,
                 ),
@@ -135,13 +160,20 @@ class _LottiePageState extends State<LottiePage> {
     if (color == Colors.teal.shade200) return "Teal";
     if (color == Colors.amber.shade200) return "Amber";
     if (color == Colors.cyan.shade200) return "Cyan";
+    if (color == Colors.brown.shade200) return "Brown";
+    if (color == Colors.indigo.shade200) return "Indigo";
+    if (color == Colors.lime.shade200) return "Lime";
+    if (color == Colors.grey.shade300) return "Grey";
+    if (color == Colors.pink.shade100) return "Light Pink";
+    if (color == Colors.deepPurple.shade200) return "Deep Purple";
+    if (color == Colors.lightBlue.shade200) return "Light Blue";
+    if (color == Colors.greenAccent.shade100) return "Light Green";
     return "Unknown";
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // tap outside cards
       onTap: hideText,
       child: Scaffold(
         appBar: AppBar(
@@ -154,7 +186,6 @@ class _LottiePageState extends State<LottiePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Text always visible until user taps outside
               if (selectedCard != null && showText)
                 AnimatedOpacity(
                   opacity: showText ? 1.0 : 0.0,
@@ -162,7 +193,7 @@ class _LottiePageState extends State<LottiePage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "The card color is ${selectedCard == 1 ? getColorName(card1Color) : getColorName(card2Color)}",
+                      "The card color is ${selectedCard == 1 ? getColorName(card1Color) : selectedCard == 2 ? getColorName(card2Color) : selectedCard == 3 ? getColorName(card3Color) : getColorName(card4Color)}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -172,9 +203,8 @@ class _LottiePageState extends State<LottiePage> {
                   ),
                 ),
 
-              // Row of cards
+              
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: buildCard(
@@ -198,32 +228,54 @@ class _LottiePageState extends State<LottiePage> {
                   ),
                 ],
               ),
-
-              const SizedBox(height: 30),
-
-              // Change button only if a card is selected
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                child: selectedCard != null
-                    ? ElevatedButton.icon(
-                        key: ValueKey(selectedCard),
-                        onPressed: changeColors,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade600,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        icon: const Icon(Icons.color_lens, color: Colors.white),
-                        label: const Text(
-                          "Change Card Colors",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+              Row(
+                children: [
+                  Expanded(
+                    child: buildCard(
+                      cardId: 3,
+                      color: card3Color,
+                      title: "Wash Hands",
+                      url:
+                          'https://assets9.lottiefiles.com/packages/lf20_tutvdkg0.json',
+                      textColor: Colors.deepOrange,
+                    ),
+                  ),
+                  Expanded(
+                    child: buildCard(
+                      cardId: 4,
+                      color: card4Color,
+                      title: "Wear Mask",
+                      url:
+                          'https://assets2.lottiefiles.com/packages/lf20_xlkxtmul.json',
+                      textColor: Colors.teal.shade900,
+                    ),
+                  ),
+                ],
               ),
+
+              const SizedBox(height: 20),
+
+              if (selectedCard != null)
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: ElevatedButton.icon(
+                    key: ValueKey(selectedCard),
+                    onPressed: changeColors,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade600,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    icon: const Icon(Icons.color_lens, color: Colors.white),
+                    label: const Text(
+                      "Change Card Colors",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
